@@ -1,0 +1,42 @@
+name: nbscuid-jupyter-book
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - dask
+  - intake
+  - intake-esm
+  - jinja2
+  - jupyter
+  - jupyter-book
+  - jupyter-server-proxy
+  - jupyter_client==7.3.4
+  - jupyter_contrib_nbextensions
+  - jupyterlab
+  - nb_conda_kernels
+  - nbformat
+  - nbsphinx
+  - nc-time-axis
+  - ncar-jobqueue
+  - netcdf4
+  - numba
+  - numpy
+  - numpydoc
+  - pandas
+  - pint
+  - pip
+  - pre-commit
+  - pytest
+  - pytest-cov
+  - python==3.9
+  - scipy
+  - statsmodels
+  - tqdm
+  - watermark
+  - xarray
+  - xcollection
+  - xesmf
+  - xgcm
+  - xhistogram
+  - xrft
+  - zarr
