@@ -5,10 +5,9 @@
 
 #######################################################################################
 # Book settings
-title: My CESM Experiment
-author: NCAR
-copyright: '2022'
-logo: logo.png
+title: nbscuid default book
+author: none
+copyright: '2023'
 
 # Force re-execution of notebooks on each build.
 execute:
@@ -19,7 +18,7 @@ execute:
 latex:
   latex_engine: pdflatex
   latex_documents:
-    targetname: my-cesm-experiment.tex
+    targetname: nbscuid-default.tex
 
 # Add a bibtex file so that we can create citations
 bibtex_bibfiles:
@@ -32,7 +31,7 @@ sphinx:
 
 # Information about where the book exists on the web
 repository:
-  url: https://github.com/matt-long/my-cesm-experiment
+  url: https://github.com/rmshkv/nbscuid
   path_to_book: notebooks
   branch: main
 
