@@ -1,27 +1,17 @@
 import os
 import shutil
 from glob import glob
-
 import pathlib
 import subprocess
-
 import json
 import yaml
-
 import jupyter_client
-
 import papermill as pm
 from papermill.engines import NBClientEngine
-
 from jinja2 import Template
-
 import dask
 from dask_jobqueue import PBSCluster
 from dask.distributed import Client
-
-
-path_to_here = os.path.dirname(os.path.realpath(__file__))
-
 
 def get_ClusterClient(memory="25GB", account="NCGD0011", on_hub=True):
     cluster = get_Cluster(memory, account, on_hub)
@@ -176,6 +166,9 @@ def setup_book(config_path):
         yaml.dump(toc, fid, sort_keys=False)
 
     # read config defaults
+    
+    path_to_here = os.path.dirname(os.path.realpath(__file__))
+    
     with open(f"{path_to_here}/_jupyter-book-config-defaults.yml", "r") as fid:
         config = yaml.safe_load(fid)
 
@@ -234,3 +227,69 @@ def get_toc_files(nb_path_root, toc_dict, include_glob=True):
         return file_list
 
     return _toc_files(toc_dict)
+
+def run_notebook(nb, info, cluster, cat_path, nb_path_root, output_dir, dependent_asset_path=None):
+    """
+    nb: key from dict of notebooks
+    info: various specifications for the notebook, originally from config.yml
+    use_catalog: bool specified earlier, specifying if whole collection uses a catalog or not
+    nb_path_root: from config.yml, path to folder containing template notebooks
+    output_dir: set directory where computed notebooks get put
+    
+    """
+
+    parameter_groups = info['parameter_groups']
+    use_cluster = info['use_cluster']
+
+    ### passing in subset kwargs if they're provided
+    if 'subset' in info:
+        subset_kwargs = info['subset']
+    else:
+        subset_kwargs = {}
+
+    default_params = {}
+    if 'default_params' in info:
+        default_params = info['default_params']
+
+    for key, parms in parameter_groups.items():
+
+        input_path = f'{nb_path_root}/{nb}.ipynb'
+        output_path = (
+            f'{output_dir}/{nb}-{key}.ipynb'
+            if key != 'none' else f'{output_dir}/{nb}.ipynb'
+        )
+
+        # check notebook expectations
+        nb_api = pm.inspect_notebook(input_path)
+
+        if nb_api:
+            
+            ### all of these things should be optional
+            parms_in = dict(**default_params)
+            parms_in.update(dict(**parms))
+            
+
+            
+            parms_in['cluster_scheduler_address'] = cluster.scheduler_address
+            parms_in['subset_kwargs'] = subset_kwargs            
+            
+            if cat_path != None:
+                parms_in['path_to_cat'] = cat_path
+            if dependent_asset_path != None:
+                print(dependent_asset_path)
+                parms_in['asset_path'] = dependent_asset_path
+                
+        else:
+            parms_in = {}
+
+        print(f'Executing {input_path}')
+        o = pm.execute_notebook(
+            input_path=input_path,
+            output_path=output_path,
+            kernel_name=info['kernel_name'],
+            parameters=parms_in,
+            engine_name='md_jinja',
+            jinja_data=parms,
+        )
+        
+    return None

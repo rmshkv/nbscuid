@@ -15,12 +15,10 @@ if __name__ == '__main__':
     control = util.get_control_dict(config_path)
     util.setup_book(config_path)
         
-    # Spin up a cluster
+    # Cluster management 
     # Notebooks are configured to connect to this cluster
     cluster = util.get_Cluster(account=control['account'])
-    
-    ### Should this be user modifiable?
-    cluster.scale(32)
+    cluster.scale(32) # Should this be user modifiable?
     
     # Grab paths
     
@@ -33,22 +31,29 @@ if __name__ == '__main__':
     
     nb_path_root = control['data_sources']['nb_path_root']
     
-    # Access catalog
+    # Access catalog if it exists
+
+    cat_path = None
     
-    full_cat_path = control['data_sources']['path_to_cat_json']
-    full_cat = intake.open_esm_datastore(full_cat_path)
+    if 'path_to_cat_json' in control['data_sources']:
+        use_catalog = True
+        full_cat_path = control['data_sources']['path_to_cat_json']
+        full_cat = intake.open_esm_datastore(full_cat_path)
     
-   
     # Doing initial subsetting on full catalog, e.g. to only use certain cases
 
-    if 'subset' in control['data_sources']:
-        first_subset_kwargs = control['data_sources']['subset']
-        cat_subset = full_cat.search(**first_subset_kwargs)
-        # This pulls out the name of the catalog from the path
-        cat_subset_name = full_cat_path.split("/")[-1].split('.')[0] + "_subset"
-        cat_subset.serialize(directory=temp_data_path, name=cat_subset_name, catalog_type="file")
-        cat_path = temp_data_path + "/" + cat_subset_name + ".json"
+        if 'subset' in control['data_sources']:
+            first_subset_kwargs = control['data_sources']['subset']
+            cat_subset = full_cat.search(**first_subset_kwargs)
+            # This pulls out the name of the catalog from the path
+            cat_subset_name = full_cat_path.split("/")[-1].split('.')[0] + "_subset"
+            cat_subset.serialize(directory=temp_data_path, name=cat_subset_name, catalog_type="file")
+            cat_path = temp_data_path + "/" + cat_subset_name + ".json"
+        else:
+            cat_path = full_cat_path
         
+    
+    #####################################################################
     # Organizing notebooks into three lists
     
     precompute_nbs = dict()
@@ -74,8 +79,11 @@ if __name__ == '__main__':
         if key in regular_nbs:
             regular_nbs.pop(key)
             
+    #####################################################################
     # Calculating precompute notebooks
 
+    ### To do: figure out how to organize the caching code better, keeping the whole block for now
+    
     for nb, info in precompute_nbs.items():
     
         parameter_groups = info['parameter_groups']
@@ -94,7 +102,7 @@ if __name__ == '__main__':
         for key, parms in parameter_groups.items():
 
 
-            ### fix this input path (and also organize this code betteR)
+            ### fix this input path (and also organize this code better)
             input_path = f'{nb_path_root}/{nb}.ipynb'
             output_path = (
                 f'{output_dir}/{nb}-{key}.ipynb'
@@ -116,8 +124,6 @@ if __name__ == '__main__':
             else:
 
                 nb_api = pm.inspect_notebook(input_path)
-
-                # TODO: validate paramter and API
 
                 asset_path = cache.make_filename(cache_data_path, input_path, full_cat_path) + ".nc"
 
@@ -141,8 +147,6 @@ if __name__ == '__main__':
                     jinja_data=parms,
                 )
 
-
-
                 cache.make_sidecar_entry(cache_metadata_path, 
                                                input_path, 
                                                full_cat_path, 
@@ -158,105 +162,16 @@ if __name__ == '__main__':
     
     for nb, info in regular_nbs.items():
     
-        parameter_groups = info['parameter_groups']
-        use_cluster = info['use_cluster']
-
-        ### passing in subset kwargs if they're provided
-        if 'subset' in info:
-            subset_kwargs = info['subset']
-        else:
-            subset_kwargs = {}
-
-        default_params = {}
-        if 'default_params' in info:
-            default_params = info['default_params']
-
-        for key, parms in parameter_groups.items():
-
-            input_path = f'{nb_path_root}/{nb}.ipynb'
-            output_path = (
-                f'{output_dir}/{nb}-{key}.ipynb'
-                if key != 'none' else f'{output_dir}/{nb}.ipynb'
-            )
-
-            # check notebook expectations
-            nb_api = pm.inspect_notebook(input_path)
-
-            # TODO: validate paramter and API
-
-            if nb_api:
-                parms_in = dict(**default_params)
-                parms_in.update(dict(**parms))
-                parms_in['path_to_cat'] = cat_path
-                parms_in['cluster_scheduler_address'] = cluster.scheduler_address
-                parms_in['subset_kwargs'] = subset_kwargs
-            else:
-                parms_in = {}
-
-            print(f'executing {input_path}')
-            o = pm.execute_notebook(
-                input_path=input_path,
-                output_path=output_path,
-                kernel_name=info['kernel_name'],
-                parameters=parms_in,
-                engine_name='md_jinja',
-                jinja_data=parms,
-            )
+        util.run_notebook(nb, info, cluster, cat_path, nb_path_root, output_dir)
     
     # Calculating notebooks with dependencies
     
     for nb, info in dependent_nbs.items():
     
         ### getting necessary asset:
-        called_nb = info['dependency']
-        dependent_asset_path = precompute_nbs[called_nb]["asset_path"]
-
-
-        parameter_groups = info['parameter_groups']
-        use_cluster = info['use_cluster']
-
-        ### passing in subset kwargs if they're provided
-        if 'subset' in info:
-            subset_kwargs = info['subset']
-        else:
-            subset_kwargs = {}
-
-        default_params = {}
-        if 'default_params' in info:
-            default_params = info['default_params']
-
-        for key, parms in parameter_groups.items():
-
-            input_path = f'{nb_path_root}/{nb}.ipynb'
-            output_path = (
-                f'{output_dir}/{nb}-{key}.ipynb'
-                if key != 'none' else f'{output_dir}/{nb}.ipynb'
-            )
-
-            # check notebook expectations
-            nb_api = pm.inspect_notebook(input_path)
-
-            # TODO: validate paramter and API
-
-            if nb_api:
-                parms_in = dict(**default_params)
-                parms_in.update(dict(**parms))
-                parms_in['path_to_cat'] = cat_path
-                parms_in['cluster_scheduler_address'] = cluster.scheduler_address
-                parms_in['subset_kwargs'] = subset_kwargs
-                parms_in['asset_path'] = dependent_asset_path
-            else:
-                parms_in = {}
-
-            print(f'executing {input_path}')
-            o = pm.execute_notebook(
-                input_path=input_path,
-                output_path=output_path,
-                kernel_name=info['kernel_name'],
-                parameters=parms_in,
-                engine_name='md_jinja',
-                jinja_data=parms,
-            )
+        dependent_asset_path = precompute_nbs[info['dependency']]["asset_path"]
+        
+        util.run_notebook(nb, info, cluster, cat_path, nb_path_root, output_dir, dependent_asset_path)
 
     # Closing cluster
     cluster.close()
