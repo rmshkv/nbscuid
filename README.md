@@ -4,6 +4,16 @@
 
 This is a package to enable running notebook-based diagnostic workflows. Based on my-cesm-experiment by matt-long: https://github.com/matt-long/my-cesm-experiment. 
 
+## Capabilities
+
+- Integration with data catalogs
+- Inject custom parameters into code and Markdown cells
+- Run many notebooks at once on a parameter set, or different parameters per notebook
+- Run different notebooks in different environments
+- Cache intermediate data products
+- Quickly build a Jupyter book with results
+
+
 ## Installation
 
 1. Clone this repo
