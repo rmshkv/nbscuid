@@ -268,9 +268,8 @@ def run_notebook(nb, info, cluster, cat_path, nb_path_root, output_dir, dependen
             parms_in = dict(**default_params)
             parms_in.update(dict(**parms))
             
-
-            
-            parms_in['cluster_scheduler_address'] = cluster.scheduler_address
+            if use_cluster:
+                parms_in['cluster_scheduler_address'] = cluster.scheduler_address
             parms_in['subset_kwargs'] = subset_kwargs            
             
             if cat_path != None:
@@ -290,6 +289,7 @@ def run_notebook(nb, info, cluster, cat_path, nb_path_root, output_dir, dependen
             parameters=parms_in,
             engine_name='md_jinja',
             jinja_data=parms,
+            cwd=nb_path_root
         )
         
     return None

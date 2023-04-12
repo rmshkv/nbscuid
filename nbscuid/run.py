@@ -131,7 +131,9 @@ if __name__ == '__main__':
                     parms_in = dict(**default_params)
                     parms_in.update(dict(**parms))
                     parms_in['path_to_cat'] = cat_path
-                    parms_in['cluster_scheduler_address'] = cluster.scheduler_address
+                    
+                    if use_cluster:
+                        parms_in['cluster_scheduler_address'] = cluster.scheduler_address
                     parms_in['subset_kwargs'] = subset_kwargs
                     parms_in['asset_path'] = asset_path
                 else:
@@ -145,6 +147,7 @@ if __name__ == '__main__':
                     parameters=parms_in,
                     engine_name='md_jinja',
                     jinja_data=parms,
+                    cwd=nb_path_root
                 )
 
                 cache.make_sidecar_entry(cache_metadata_path, 
