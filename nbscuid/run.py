@@ -16,7 +16,7 @@ if __name__ == '__main__':
     util.setup_book(config_path)
         
     # Cluster management 
-    # Notebooks are configured to connect to this cluster
+    # Notebooks are configured to connect to this cluster    
     cluster = util.get_Cluster(account=control['account'])
     cluster.scale(32) # Should this be user modifiable?
     
