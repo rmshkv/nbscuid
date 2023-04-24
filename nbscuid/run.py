@@ -4,20 +4,20 @@ import os
 from glob import glob
 import papermill as pm
 import intake
-import util
-import cache
+import nbscuid.util
+import nbscuid.cache
 import sys
 
-if __name__ == '__main__':
+def run():
 
     # Get control structure
     config_path = str(sys.argv[1])
-    control = util.get_control_dict(config_path)
-    util.setup_book(config_path)
+    control = nbscuid.util.get_control_dict(config_path)
+    nbscuid.util.setup_book(config_path)
         
     # Cluster management 
     # Notebooks are configured to connect to this cluster    
-    cluster = util.get_Cluster(account=control['account'])
+    cluster = nbscuid.util.get_Cluster(account=control['account'])
     cluster.scale(32) # Should this be user modifiable?
     
     # Grab paths
@@ -110,7 +110,7 @@ if __name__ == '__main__':
             )
 
 
-            result_df = cache.gen_df_query(cache_metadata_path, input_path, 
+            result_df = nbscuid.cache.gen_df_query(cache_metadata_path, input_path, 
                                    full_cat_path, first_subset=first_subset_kwargs, 
                                                  second_subset=subset_kwargs,
                                    params=parms)
@@ -125,7 +125,7 @@ if __name__ == '__main__':
 
                 nb_api = pm.inspect_notebook(input_path)
 
-                asset_path = cache.make_filename(cache_data_path, input_path, full_cat_path) + ".nc"
+                asset_path = nbscuid.cache.make_filename(cache_data_path, input_path, full_cat_path) + ".nc"
 
                 if nb_api:
                     parms_in = dict(**default_params)
@@ -150,7 +150,7 @@ if __name__ == '__main__':
                     cwd=nb_path_root
                 )
 
-                cache.make_sidecar_entry(cache_metadata_path, 
+                nbscuid.cache.make_sidecar_entry(cache_metadata_path, 
                                                input_path, 
                                                full_cat_path, 
                                                asset_path=asset_path, 
@@ -165,7 +165,7 @@ if __name__ == '__main__':
     
     for nb, info in regular_nbs.items():
     
-        util.run_notebook(nb, info, cluster, cat_path, nb_path_root, output_dir)
+        nbscuid.util.run_notebook(nb, info, cluster, cat_path, nb_path_root, output_dir)
     
     # Calculating notebooks with dependencies
     
@@ -174,8 +174,10 @@ if __name__ == '__main__':
         ### getting necessary asset:
         dependent_asset_path = precompute_nbs[info['dependency']]["asset_path"]
         
-        util.run_notebook(nb, info, cluster, cat_path, nb_path_root, output_dir, dependent_asset_path)
+        nbscuid.util.run_notebook(nb, info, cluster, cat_path, nb_path_root, output_dir, dependent_asset_path)
 
     # Closing cluster
     cluster.close()
+    
+    return None
     

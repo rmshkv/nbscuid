@@ -18,19 +18,14 @@ This is a package to enable running notebook-based diagnostic workflows. Based o
 
 1. Clone this repo
 
-2. Create two environments:
-```
-mamba env create -f environment1.yml
-mamba env create -f environment2.yml
-```
-
-(It's also possible to use conda with the same command, but mamba is a lot faster.)
-
-3. Activate the environment you want to install `nbscuid` in (not one of the two created above). Within the cloned `nbscuid` directory, run:
-```
-pip install .
-```
-
+2. Activate the environment you want to install `nbscuid` in. Within the cloned `nbscuid` directory, run:
+    ```
+    pip install .
+    ```
+    Alternatively, to install the commands `nbscuid-run` and `nbscuid-build` without installing all of nbscuid's dependencies, first install `pipx` with `pip install pipx`, then run:
+    ```
+    pipx install .
+    ```
 
 ## Running a notebook collection
 
@@ -48,5 +43,6 @@ To build the jupyter book if desired, execute:
 ```
 nbscuid-build path/to/config.yml
 ```
+
 
 

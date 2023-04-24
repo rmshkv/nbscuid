@@ -15,11 +15,24 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License"
 ]
+dependencies = [
+    "black",
+    "dask",
+    "dask-jobqueue",
+    "intake",
+    "intake-esm",
+    "jinja2",
+    "jupyter-book",
+    "pandas",
+    "papermill",
+    "xarray",
+    "pyyaml"
+]
 
 [project.urls]
 source = "https://github.com/rmshkv/nbscuid"
 
 
 [project.scripts]
-nbscuid-run = "nbscuid.run_wrapper:run"
-nbscuid-build = "nbscuid.build_wrapper:build"
+nbscuid-run = "nbscuid.run:run"
+nbscuid-build = "nbscuid.build:build"
