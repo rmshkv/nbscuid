@@ -22,7 +22,7 @@ This is a package to enable running notebook-based diagnostic workflows. Based o
     ```
     pip install .
     ```
-    Alternatively, to install the commands `nbscuid-run` and `nbscuid-build` without installing all of nbscuid's dependencies, first install `pipx` with `pip install pipx`, then run:
+    Alternatively, to install the commands `nbscuid-run` and `nbscuid-build` without installing all of `nbscuid`'s dependencies, first install `pipx` with `pip install pipx`, then run:
     ```
     pipx install .
     ```
