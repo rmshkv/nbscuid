@@ -16,6 +16,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License"
 ]
 dependencies = [
+    "black",
     "dask",
     "dask-jobqueue",
     "intake",
