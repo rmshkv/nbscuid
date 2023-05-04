@@ -33,7 +33,7 @@ def get_Cluster(memory="25GB", account="NCGD0011", on_hub=True):
         resource_spec=f"select=1:ncpus=1:mem={memory}",
         account=account,
         walltime="06:00:00",
-        interface="mgt",
+        interface="ib0",
     )
 
     if on_hub:
