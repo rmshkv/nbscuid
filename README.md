@@ -4,6 +4,8 @@
 
 This is a package to enable running notebook-based diagnostic workflows. Based on my-cesm-experiment by matt-long: https://github.com/matt-long/my-cesm-experiment. 
 
+See some examples of workflows at https://github.com/rmshkv/nbscuid-examples.
+
 ## Capabilities
 
 - Integration with data catalogs
