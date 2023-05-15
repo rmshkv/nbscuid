@@ -7,6 +7,8 @@ import intake
 import nbscuid.util
 import nbscuid.cache
 import sys
+from dask.distributed import Client
+import time
 
 def run():
 
@@ -18,7 +20,7 @@ def run():
     # Cluster management 
     # Notebooks are configured to connect to this cluster    
     cluster = nbscuid.util.get_Cluster(account=control['account'])
-    cluster.scale(32) # Should this be user modifiable?
+    cluster.scale(4) # Should this be user modifiable?
     
     # Grab paths
     
@@ -79,6 +81,30 @@ def run():
         if key in regular_nbs:
             regular_nbs.pop(key)
             
+            
+    #####################################################################
+    # Pausing to wait for workers to avoid timeout error
+    
+    client = Client(cluster.scheduler_address)
+    
+    nworkers = 1
+    
+    waiting_count = 0
+    
+    while ((client.status == "running") and (len(client.scheduler_info()["workers"]) < nworkers)):
+        time.sleep(1.0)
+        if waiting_count == 0:
+            print("Waiting for Dask workers", end = '')
+        else:
+            print(".", end = '')
+        waiting_count += 1
+        
+    print("\n")
+        
+    
+    client.close()
+    
+    
     #####################################################################
     # Calculating precompute notebooks
 
