@@ -1,10 +1,18 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "setuptools_scm[toml]>=6.2"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+#include-package-data = true
+packages = ["nbscuid"]
+
+#[tool.setuptools.package-data]
+#mypkg = ["*.yml"]
+
 
 [project]
 name = "nbscuid"
-version = "0.0.1"
+version = "0.0.6"
 authors = [
   { name="Elena Romashkova", email="eromashkova@ucar.edu" },
 ]

@@ -18,16 +18,16 @@ See some examples of workflows at https://github.com/rmshkv/nbscuid-examples.
 
 ## Installation
 
-1. Clone this repo
-
-2. Activate the environment you want to install `nbscuid` in. Within the cloned `nbscuid` directory, run:
+- Run:
     ```
-    pip install .
+    pip install nbscuid
     ```
-    Alternatively, to install the commands `nbscuid-run` and `nbscuid-build` without installing all of `nbscuid`'s dependencies, first install `pipx` with `pip install pipx`, then run:
+    
+    Alternatively, to install the commands `nbscuid-run` and `nbscuid-build` without installing all of `nbscuid`'s dependencies, first install pipx with `pip install pipx`, then run:
     ```
-    pipx install .
+    pipx install nbscuid
     ```
+    
 
 ## Running a notebook collection
 
