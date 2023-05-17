@@ -21,7 +21,7 @@
 7. `cd` into the `nbscuid-examples/tutorial` folder.
 8. Run 
             
-            nbscuid-run config.yml 
+        nbscuid-run config.yml 
 
     This will run a few simple notebooks showcasing some of `nbscuid`'s capabilities. The executed notebooks get copied to a directory called `computed_notebooks/placeholder-title` created in your `run_dir`.
 9. Next, run 
