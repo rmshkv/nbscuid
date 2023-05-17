@@ -10,6 +10,8 @@ Welcome to nbscuid's documentation!
    :maxdepth: 2
    :caption: Contents:
    
+   gettingstarted
+   tutorialsetup
    modules
    nbscuid
 
