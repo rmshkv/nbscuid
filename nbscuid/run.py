@@ -8,6 +8,7 @@ import nbscuid.util
 import nbscuid.cache
 import sys
 from dask.distributed import Client
+import dask
 import time
 
 def run():
@@ -53,6 +54,14 @@ def run():
             cat_path = temp_data_path + "/" + cat_subset_name + ".json"
         else:
             cat_path = full_cat_path
+            
+    
+    # Grabbing global params if they're included
+    
+    global_params = dict()
+    
+    if 'global_params' in control:
+        global_params = control['global_params']
         
     
     #####################################################################
@@ -84,6 +93,8 @@ def run():
             
     #####################################################################
     # Pausing to wait for workers to avoid timeout error
+           
+    dask.config.set({'distributed.comm.timeouts.connect': '90s'})
     
     client = Client(cluster.scheduler_address)
     
@@ -155,6 +166,7 @@ def run():
 
                 if nb_api:
                     parms_in = dict(**default_params)
+                    parms_in.update(**global_params)
                     parms_in.update(dict(**parms))
                     parms_in['path_to_cat'] = cat_path
                     
@@ -182,6 +194,8 @@ def run():
                                                asset_path=asset_path, 
                                                first_subset=first_subset_kwargs, 
                                                second_subset= subset_kwargs,
+                                               
+                                               ### this might need to be changed to parms_in, not parms, to include global parms  
                                                params=parms)
 
                 # this can only properly handle one save per notebook (FIX LATER)
@@ -191,7 +205,7 @@ def run():
     
     for nb, info in regular_nbs.items():
     
-        nbscuid.util.run_notebook(nb, info, cluster, cat_path, nb_path_root, output_dir)
+        nbscuid.util.run_notebook(nb, info, cluster, cat_path, nb_path_root, output_dir, global_params)
     
     # Calculating notebooks with dependencies
     
@@ -200,7 +214,7 @@ def run():
         ### getting necessary asset:
         dependent_asset_path = precompute_nbs[info['dependency']]["asset_path"]
         
-        nbscuid.util.run_notebook(nb, info, cluster, cat_path, nb_path_root, output_dir, dependent_asset_path)
+        nbscuid.util.run_notebook(nb, info, cluster, cat_path, nb_path_root, output_dir, global_params, dependent_asset_path)
 
     # Closing cluster
     cluster.close()
