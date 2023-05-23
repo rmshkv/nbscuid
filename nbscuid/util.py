@@ -228,7 +228,7 @@ def get_toc_files(nb_path_root, toc_dict, include_glob=True):
 
     return _toc_files(toc_dict)
 
-def run_notebook(nb, info, cluster, cat_path, nb_path_root, output_dir, dependent_asset_path=None):
+def run_notebook(nb, info, cluster, cat_path, nb_path_root, output_dir, global_params, dependent_asset_path=None):
     """
     nb: key from dict of notebooks
     info: various specifications for the notebook, originally from config.yml
@@ -266,6 +266,7 @@ def run_notebook(nb, info, cluster, cat_path, nb_path_root, output_dir, dependen
             
             ### all of these things should be optional
             parms_in = dict(**default_params)
+            parms_in.update(**global_params)
             parms_in.update(dict(**parms))
             
             if use_cluster:
