@@ -228,7 +228,7 @@ def get_toc_files(nb_path_root, toc_dict, include_glob=True):
 
     return _toc_files(toc_dict)
 
-def run_notebook(nb, info, cluster, cat_path, nb_path_root, output_dir, global_params, dependent_asset_path=None):
+def run_notebook(nb, info, use_cluster, cat_path, nb_path_root, output_dir, global_params, dependent_asset_path=None, cluster=None):
     """
     nb: key from dict of notebooks
     info: various specifications for the notebook, originally from config.yml
@@ -239,7 +239,6 @@ def run_notebook(nb, info, cluster, cat_path, nb_path_root, output_dir, global_p
     """
 
     parameter_groups = info['parameter_groups']
-    use_cluster = info['use_cluster']
 
     ### passing in subset kwargs if they're provided
     if 'subset' in info:
@@ -259,28 +258,25 @@ def run_notebook(nb, info, cluster, cat_path, nb_path_root, output_dir, global_p
             if key != 'none' else f'{output_dir}/{nb}.ipynb'
         )
 
-        # check notebook expectations
-        nb_api = pm.inspect_notebook(input_path)
 
-        if nb_api:
+        ### all of these things should be optional
+        parms_in = dict(**default_params)
+        parms_in.update(**global_params)
+        parms_in.update(dict(**parms))
             
-            ### all of these things should be optional
-            parms_in = dict(**default_params)
-            parms_in.update(**global_params)
-            parms_in.update(dict(**parms))
-            
-            if use_cluster:
-                parms_in['cluster_scheduler_address'] = cluster.scheduler_address
-            parms_in['subset_kwargs'] = subset_kwargs            
-            
-            if cat_path != None:
-                parms_in['path_to_cat'] = cat_path
-            if dependent_asset_path != None:
-                print(dependent_asset_path)
-                parms_in['asset_path'] = dependent_asset_path
-                
+        if use_cluster:
+            parms_in['cluster_scheduler_address'] = cluster.scheduler_address
         else:
-            parms_in = {}
+            parms_in['cluster_scheduler_address'] = None
+                
+        parms_in['subset_kwargs'] = subset_kwargs            
+            
+        if cat_path != None:
+            parms_in['path_to_cat'] = cat_path
+        if dependent_asset_path != None:
+            print(dependent_asset_path)
+            parms_in['asset_path'] = dependent_asset_path
+                
 
         print(f'Executing {input_path}')
         o = pm.execute_notebook(
