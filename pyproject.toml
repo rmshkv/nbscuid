@@ -8,7 +8,7 @@ packages = ["nbscuid"]
 
 [project]
 name = "nbscuid"
-version = "0.0.7"
+version = "0.0.8"
 authors = [
   { name="Elena Romashkova", email="eromashkova@ucar.edu" },
 ]
