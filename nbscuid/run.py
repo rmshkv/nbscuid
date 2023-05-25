@@ -12,10 +12,10 @@ import dask
 import time
 
 def run():
-
+    
     # Get control structure
     config_path = str(sys.argv[1])
-    control = nbscuid.util.get_control_dict(config_path)
+    control = nbscuid.util.get_control_dict(config_path)    
     nbscuid.util.setup_book(config_path)
         
     if control['use_cluster']:    
@@ -29,14 +29,13 @@ def run():
     # Grab paths
     
     ### This code seems repetitive, is there a better way to do this?
-    run_dir = control['data_sources']['run_dir']
+    run_dir = os.path.expanduser(control['data_sources']['run_dir'])
     output_dir = run_dir + "/computed_notebooks/" + control['data_sources']['casename']
     cache_metadata_path = run_dir + "/cache_metadata_path"
     cache_data_path = run_dir + "/cache_data_path"
-    temp_data_path = run_dir + "/temp_data"
-    
-    nb_path_root = control['data_sources']['nb_path_root']
-    
+    temp_data_path = run_dir + "/temp_data" 
+    nb_path_root = os.path.expanduser(control['data_sources']['nb_path_root'])
+
     # Access catalog if it exists
 
     cat_path = None

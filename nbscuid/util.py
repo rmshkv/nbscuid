@@ -84,6 +84,7 @@ class manage_conda_kernel(object):
             return
 
         path = self.getcwd()
+        print(path)
         if path is None:
             raise ValueError(f'conda kernel "{self.kernel_name}" not found')
         path = path / pathlib.Path("share/jupyter/kernels")
@@ -141,7 +142,7 @@ def setup_book(config_path):
     control = get_control_dict(config_path)
 
     # ensure directory
-    run_dir = control['data_sources']["run_dir"]
+    run_dir = os.path.expanduser(control['data_sources']["run_dir"])
     output_root = run_dir + "/computed_notebooks"
     
     os.makedirs(output_root, exist_ok=True)
@@ -181,7 +182,7 @@ def setup_book(config_path):
 
     # get list of computational notebooks
     
-    nb_path_root = control['data_sources']['nb_path_root']
+    nb_path_root = os.path.expanduser(control['data_sources']['nb_path_root'])
     
     compute_notebooks = [f"{nb_path_root}/{f}.ipynb" for f in control["compute_notebooks"].keys()]
 
