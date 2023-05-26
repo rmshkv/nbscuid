@@ -12,11 +12,11 @@ def build():
     with open(config_path, "r") as fid:
         control = yaml.safe_load(fid)
     
-    casename = control["data_sources"]["casename"]
+    sname = control["data_sources"]["sname"]
     run_dir = control["data_sources"]["run_dir"]
 
-    subprocess.run(["jupyter-book", "clean" , f"{run_dir}/computed_notebooks/{casename}"])
-    subprocess.run(["jupyter-book",  "build" , f"{run_dir}/computed_notebooks/{casename}",  "--all"])
+    subprocess.run(["jupyter-book", "clean" , f"{run_dir}/computed_notebooks/{sname}"])
+    subprocess.run(["jupyter-book",  "build" , f"{run_dir}/computed_notebooks/{sname}",  "--all"])
                    
 #     if 'publish_location' in control:
         
@@ -25,7 +25,7 @@ def build():
 #         remote_dir = control["publish_location"]["remote_dir"]
 # this seems more complicated than expected...people have mentioned paramiko library?
         # subprocess.run(["mkdir", "-p", remote_dir])
-        # subprocess.run(["scp", "-r", f"{run_dir}/computed_notebooks/{casename}/_build/html/*", f"{user}@{remote_mach}:{remote_dir}"])
+        # subprocess.run(["scp", "-r", f"{run_dir}/computed_notebooks/{sname}/_build/html/*", f"{user}@{remote_mach}:{remote_dir}"])
         
     return None
 

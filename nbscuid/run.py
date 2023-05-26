@@ -18,10 +18,10 @@ def run():
     control = nbscuid.util.get_control_dict(config_path)    
     nbscuid.util.setup_book(config_path)
         
-    if control['use_cluster']:    
+    if control['computation_config']['use_cluster']:    
         # Cluster management 
         # Notebooks are configured to connect to this cluster    
-        cluster = nbscuid.util.get_Cluster(account=control['account'])
+        cluster = nbscuid.util.get_Cluster(account=control['computation_config']['account'])
         cluster.scale(4) # Should this be user modifiable?
     else:
         cluster = None
@@ -30,7 +30,7 @@ def run():
     
     ### This code seems repetitive, is there a better way to do this?
     run_dir = os.path.expanduser(control['data_sources']['run_dir'])
-    output_dir = run_dir + "/computed_notebooks/" + control['data_sources']['casename']
+    output_dir = run_dir + "/computed_notebooks/" + control['data_sources']['sname']
     cache_metadata_path = run_dir + "/cache_metadata_path"
     cache_data_path = run_dir + "/cache_data_path"
     temp_data_path = run_dir + "/temp_data" 
@@ -96,7 +96,7 @@ def run():
     #####################################################################
     # Pausing to wait for workers to avoid timeout error
         
-    if control['use_cluster']:
+    if control['computation_config']['use_cluster']:
         
         dask.config.set({'distributed.comm.timeouts.connect': '90s'})
 
@@ -129,7 +129,7 @@ def run():
     
         parameter_groups = info['parameter_groups']
         
-        use_cluster = control['use_cluster'] and info['use_cluster']
+        use_cluster = control['computation_config']['use_cluster'] and info['use_cluster']
 
         ### passing in subset kwargs if they're provided
         if 'subset' in info:
@@ -208,7 +208,7 @@ def run():
     
     for nb, info in regular_nbs.items():
         
-        use_cluster = control['use_cluster'] and info['use_cluster']
+        use_cluster = control['computation_config']['use_cluster']and info['use_cluster']
         
         nbscuid.util.run_notebook(nb, info, use_cluster, cat_path, nb_path_root, output_dir, global_params, cluster=cluster)
     
@@ -216,14 +216,14 @@ def run():
     
     for nb, info in dependent_nbs.items():
         
-        use_cluster = control['use_cluster'] and info['use_cluster']
+        use_cluster = control['computation_config']['use_cluster'] and info['use_cluster']
     
         ### getting necessary asset:
         dependent_asset_path = precompute_nbs[info['dependency']]["asset_path"]
         
         nbscuid.util.run_notebook(nb, info, use_cluster, cat_path, nb_path_root, output_dir, global_params, dependent_asset_path=dependent_asset_path, cluster=cluster)
     
-    if control['use_cluster']:
+    if control['computation_config']['use_cluster']:
         # Closing cluster
         cluster.close()
     

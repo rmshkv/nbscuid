@@ -120,7 +120,7 @@ def get_control_dict(config_path):
     with open(config_path, "r") as fid:
         control = yaml.safe_load(fid)
 
-    default_kernel_name = control.pop("default_kernel_name", None)
+    default_kernel_name = control["computation_config"].pop("default_kernel_name", None)
 
     if default_kernel_name is not None:
         for d in control["compute_notebooks"].values():
@@ -147,7 +147,7 @@ def setup_book(config_path):
     
     os.makedirs(output_root, exist_ok=True)
     
-    output_dir = f'{output_root}/{control["data_sources"]["casename"]}'
+    output_dir = f'{output_root}/{control["data_sources"]["sname"]}'
     
     os.makedirs(output_dir, exist_ok=True)
     
