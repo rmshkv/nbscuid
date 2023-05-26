@@ -1,7 +1,7 @@
 # nbscuid 🦑
 ### Notebook-Based, Super CUstomizable Infrastructure for Diagnostics
 
-<img title="logo" alt="logo" src="docs/nbscuid_logo.png" width = 400px>
+<img title="logo" alt="logo" src="docs/source/nbscuid_logo.png" width = 400px>
 
 
 This is a package to enable running notebook-based diagnostic workflows. Based on my-cesm-experiment by matt-long: https://github.com/matt-long/my-cesm-experiment. 
