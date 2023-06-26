@@ -29,12 +29,12 @@ def run():
     # Grab paths
     
     ### This code seems repetitive, is there a better way to do this?
-    run_dir = os.path.expanduser(control['data_sources']['run_dir'])
+    run_dir = os.path.realpath(os.path.expanduser(control['data_sources']['run_dir']))
     output_dir = run_dir + "/computed_notebooks/" + control['data_sources']['sname']
     cache_metadata_path = run_dir + "/cache_metadata_path"
     cache_data_path = run_dir + "/cache_data_path"
     temp_data_path = run_dir + "/temp_data" 
-    nb_path_root = os.path.expanduser(control['data_sources']['nb_path_root'])
+    nb_path_root = os.path.realpath(os.path.expanduser(control['data_sources']['nb_path_root']))
 
     # Access catalog if it exists
 
@@ -42,7 +42,7 @@ def run():
     
     if 'path_to_cat_json' in control['data_sources']:
         use_catalog = True
-        full_cat_path = control['data_sources']['path_to_cat_json']
+        full_cat_path = os.path.realpath(os.path.expanduser(control['data_sources']['path_to_cat_json']))
         full_cat = intake.open_esm_datastore(full_cat_path)
     
     # Doing initial subsetting on full catalog, e.g. to only use certain cases
