@@ -38,7 +38,7 @@ pip install -e .
 which nbscuid-run
 ```
 
-# How to do this for the mom6-tools examples
+# How to set up mom6-tools diagnostics
 
 1. Clone my fork of mom6-tools
 
@@ -53,13 +53,12 @@ Get onto my dev branch:
 git checkout nbscuid-compat
 ```
 
-2. The nbscuid-relevant stuff lives in `mom6-tools/docs/source/examples` (for now)
+2. Cd into the directory that contains the diagnostics notebooks (this may move later)
+```
+cd `mom6-tools/mom6-tools/docs/source/examples`
+```
 
-3. Figure out which of your environments can run all the notebooks, and change this in the config.yml file under
-```
-    default_kernel_name: mom6_solutions
-```
-(my environment is called mom6_solutions). Most notably this environment should contain mom6-tools.
+3. Figure out which of your environments can run all the notebooks--most notably, it should contain mom6-tools. (This will eventually be replaced by an environment.yml file you can install). Open `config.yml` in your text editor of choice, and edit the line that says `default_kernel_name: mom6_solutions` My environment is called mom6_solutions; replace this with the name of your environment.
 
 4. Activate the dev environment you installed nbscuid into previously
 ```
@@ -67,7 +66,7 @@ conda activate nbscuid-dev
 ```
 (or whatever you called your environment)
 
-5. To test out running the notebook collection, make sure you're in the examples folder, then run:
+5. To test out running the notebook collection, make sure you're still in `mom6-tools/mom6-tools/docs/source/examples`, then run:
 
 ```
 nbscuid-run config.yml
