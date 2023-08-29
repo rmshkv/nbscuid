@@ -31,7 +31,8 @@ dependencies = [
     "pandas",
     "papermill",
     "xarray",
-    "pyyaml"
+    "pyyaml",
+    "ploomber==0.22.3"
 ]
 
 [project.urls]
