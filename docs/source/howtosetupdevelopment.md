@@ -58,7 +58,11 @@ git checkout nbscuid-compat
 cd `mom6-tools/mom6-tools/docs/source/examples`
 ```
 
-3. Figure out which of your environments can run all the notebooks--most notably, it should contain mom6-tools. (This will eventually be replaced by an environment.yml file you can install). Open `config.yml` in your text editor of choice, and edit the line that says `default_kernel_name: mom6_solutions` My environment is called mom6_solutions; replace this with the name of your environment.
+3. Install the environment that the diagnostics notebooks will run in from the `environment.yml` file:
+```
+mamba env create -f environment.yml
+```
+Note that this is different from the nbscuid-dev environment you created earlier, and you *don't* need to activate it.
 
 4. Activate the dev environment you installed nbscuid into previously
 ```
