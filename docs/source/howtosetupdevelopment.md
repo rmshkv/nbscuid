@@ -22,7 +22,6 @@ cd nbscuid
 
 ```
 mamba env create -f dev-environment.yml
-conda activate nbscuid-dev
 ```
 This creates a new environment called `nbscuid-dev` which contains an editable local installation of nbscuid. This means that if you change the nbscuid code in this folder, it will immediately take effect in this environment.
 
