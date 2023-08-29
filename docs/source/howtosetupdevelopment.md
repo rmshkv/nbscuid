@@ -55,7 +55,7 @@ git checkout nbscuid-compat
 
 2. Cd into the directory that contains the diagnostics notebooks (this may move later)
 ```
-cd `mom6-tools/mom6-tools/docs/source/examples`
+cd mom6-tools/mom6-tools/docs/source/examples
 ```
 
 3. Install the environment that the diagnostics notebooks will run in from the `environment.yml` file:
