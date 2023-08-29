@@ -12,6 +12,7 @@ Welcome to nbscuid's documentation!
    
    gettingstarted
    tutorialsetup
+   howtosetupdevelopment
    modules
    nbscuid
 
