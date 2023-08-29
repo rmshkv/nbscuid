@@ -12,27 +12,30 @@ Currently, the active work is being done on the include-ploomber-dev branch. To 
 git checkout include-ploomber-dev
 ```
 
-2. Create and activate an environment
+2. Cd into the folder with nbscuid source code:
 
 ```
-conda create -n nbscuid-dev
+cd nbscuid/nbscuid
 
+```
+
+2. Create a development environment:
+
+```
+mamba env create -f dev-environment.yml
+conda activate nbscuid-dev
+
+```
+This creates a new environment called `nbscuid-dev` which contains an editable local installation of nbscuid. This means that if you change the nbscuid code in this folder, it will immediately take effect in this environment.
+
+3. Troubleshooting:
+
+Activate your new development environment:
+
+```
 conda activate nbscuid-dev
 ```
-
-3. Cd into the top-level nbscuid directory
-
-```
-cd nbscuid
-```
-
-
-4. Install nbscuid from source
-```
-pip install -e .
-```
-
-5. Troubleshooting: Check
+Then run:
 
 ```
 which nbscuid-run
