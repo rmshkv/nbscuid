@@ -6,7 +6,7 @@
 git clone https://github.com/rmshkv/nbscuid.git
 ```
 
-Currently, the active work is being done on the include-ploomber-dev branch. To get on this branch, run:
+Currently, the active work is being done on the include-ploomber-dev branch. To get on this branch, inside the directory you just cloned, run:
 
 ```
 git checkout include-ploomber-dev
@@ -15,11 +15,11 @@ git checkout include-ploomber-dev
 2. Cd into the folder with nbscuid source code:
 
 ```
-cd nbscuid/nbscuid
+cd nbscuid
 
 ```
 
-2. Create a development environment:
+3. Create a development environment:
 
 ```
 mamba env create -f dev-environment.yml
@@ -28,7 +28,7 @@ conda activate nbscuid-dev
 ```
 This creates a new environment called `nbscuid-dev` which contains an editable local installation of nbscuid. This means that if you change the nbscuid code in this folder, it will immediately take effect in this environment.
 
-3. Troubleshooting:
+4. Troubleshooting:
 
 Activate your new development environment:
 
