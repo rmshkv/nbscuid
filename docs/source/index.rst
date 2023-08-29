@@ -13,6 +13,7 @@ Welcome to nbscuid's documentation!
    gettingstarted
    tutorialsetup
    howtosetupdevelopment
+   addingnotebookstocollection
    modules
    nbscuid
 
