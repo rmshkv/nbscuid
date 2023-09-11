@@ -5,13 +5,11 @@
 ```
 git clone https://github.com/rmshkv/nbscuid.git
 ```
-
 Currently, the active work is being done on the include-ploomber-dev branch. To get on this branch, inside the directory you just cloned, run:
 
 ```
 git checkout include-ploomber-dev
 ```
-
 2. Cd into the folder with nbscuid source code:
 
 ```
@@ -52,7 +50,6 @@ Get onto my dev branch:
 ```
 git checkout nbscuid-compat
 ```
-
 2. Cd into the directory that contains the diagnostics notebooks (this may move later)
 ```
 cd mom6-tools/mom6-tools/docs/source/examples

@@ -10,6 +10,7 @@ import sys
 from dask.distributed import Client
 import dask
 import time
+import ploomber
 
 def run():
     
@@ -118,6 +119,12 @@ def run():
 
 
         client.close()
+        
+        
+    #####################################################################
+    # PLoomber - making a DAG
+    
+    dag = ploomber.DAG(executor=ploomber.executors.Parallel())
     
     
     #####################################################################
@@ -126,11 +133,10 @@ def run():
     ### To do: figure out how to organize the caching code better, keeping the whole block for now
     
     for nb, info in precompute_nbs.items():
-    
+        use_cluster = control['computation_config']['use_cluster'] and info['use_cluster']
+        
         parameter_groups = info['parameter_groups']
         
-        use_cluster = control['computation_config']['use_cluster'] and info['use_cluster']
-
         ### passing in subset kwargs if they're provided
         if 'subset' in info:
             subset_kwargs = info['subset']
@@ -210,18 +216,24 @@ def run():
         
         use_cluster = control['computation_config']['use_cluster']and info['use_cluster']
         
-        nbscuid.util.run_notebook(nb, info, use_cluster, cat_path, nb_path_root, output_dir, global_params, cluster=cluster)
+        #nbscuid.util.run_notebook(nb, info, use_cluster, cat_path, nb_path_root, output_dir, global_params, cluster=cluster)
+        
+        nbscuid.util.create_ploomber_nb_task(nb, info, use_cluster, cat_path, nb_path_root, output_dir, global_params, dag, cluster=cluster)
     
     # Calculating notebooks with dependencies
     
-    for nb, info in dependent_nbs.items():
+#     for nb, info in dependent_nbs.items():
         
-        use_cluster = control['computation_config']['use_cluster'] and info['use_cluster']
+#         use_cluster = control['computation_config']['use_cluster'] and info['use_cluster']
     
-        ### getting necessary asset:
-        dependent_asset_path = precompute_nbs[info['dependency']]["asset_path"]
+#         ### getting necessary asset:
+#         dependent_asset_path = precompute_nbs[info['dependency']]["asset_path"]
         
-        nbscuid.util.run_notebook(nb, info, use_cluster, cat_path, nb_path_root, output_dir, global_params, dependent_asset_path=dependent_asset_path, cluster=cluster)
+#         nbscuid.util.run_notebook(nb, info, use_cluster, cat_path, nb_path_root, output_dir, global_params, dependent_asset_path=dependent_asset_path, cluster=cluster)
+
+    # Run the full DAG
+    
+    dag.build()
     
     if control['computation_config']['use_cluster']:
         # Closing cluster

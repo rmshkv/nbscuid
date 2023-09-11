@@ -1,0 +1,5 @@
+name: nbscuid-dev
+dependencies:
+    - pip
+    - pip:
+      - -e ../
