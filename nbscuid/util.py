@@ -377,3 +377,90 @@ def create_ploomber_nb_task(nb, info, use_cluster, cat_path, nb_path_root, outpu
                                                   params=parms)
         
     return task
+
+def create_ploomber_script_task(nb, info, use_cluster, cat_path, nb_path_root, output_dir, global_params, dag, dependent_asset_path=None, cluster=None, check_cache=False):
+    """
+    nb: key from dict of notebooks
+    info: various specifications for the notebook, originally from config.yml
+    use_catalog: bool specified earlier, specifying if whole collection uses a catalog or not
+    nb_path_root: from config.yml, path to folder containing template notebooks
+    output_dir: set directory where computed notebooks get put
+    
+    """
+
+    parameter_groups = info['parameter_groups']
+
+    ### passing in subset kwargs if they're provided
+    if 'subset' in info:
+        subset_kwargs = info['subset']
+    else:
+        subset_kwargs = {}
+
+    default_params = {}
+    if 'default_params' in info:
+        default_params = info['default_params']
+
+    for key, parms in parameter_groups.items():
+
+        input_path = f'{nb_path_root}/{nb}.ipynb'
+        output_name = (
+            f'{nb}-{key}'
+            if key != 'none' else f'{nb}'
+        )
+
+        output_path = f'{output_dir}/{output_name}'
+        
+        if check_cache:
+            
+                # problem: this takes in a bunch of prev variables 
+                result_df = nbscuid.cache.gen_df_query(cache_metadata_path, input_path, 
+                                   full_cat_path, first_subset=first_subset_kwargs, 
+                                                 second_subset=subset_kwargs, params=parms)
+                if not result_df.empty:
+                    #if multiple matches exist, grabs an arbitrary one (FIX LATER)
+                    asset_path = result_df.loc[0,'assets']
+                    precompute_nbs[nb]["asset_path"] = asset_path
+                    print("Fetching result from cache")
+        
+        ### run notebook
+        
+        ### all of these things should be optional
+        parms_in = dict(**default_params)
+        parms_in.update(**global_params)
+        parms_in.update(dict(**parms))
+            
+        if use_cluster:
+            parms_in['cluster_scheduler_address'] = cluster.scheduler_address
+        else:
+            parms_in['cluster_scheduler_address'] = None
+                
+        parms_in['subset_kwargs'] = subset_kwargs            
+            
+        if cat_path != None:
+            parms_in['path_to_cat'] = cat_path
+        
+        if dependent_asset_path != None:
+            print(dependent_asset_path)
+            parms_in['asset_path'] = dependent_asset_path
+            
+            # set DAG dependency here also 
+                
+
+        print(f'Executing {input_path}')
+        
+        pm_params = {
+                     'engine_name': 'md_jinja',
+                     'jinja_data': parms,
+                     'cwd': nb_path_root}
+        
+        pm.engines.papermill_engines._engines["md_jinja"] = md_jinja_engine
+        
+        task = ploomber.tasks.NotebookRunner(Path(input_path), ploomber.products.File(output_path + '.ipynb'), dag, params=parms_in, papermill_params=pm_params, kernelspec_name=info['kernel_name'], name=output_name)
+        
+        if check_cache:
+                nbscuid.cache.make_sidecar_entry(cache_metadata_path, input_path, full_cat_path, asset_path=asset_path, 
+                                                 first_subset=first_subset_kwargs, second_subset= subset_kwargs,
+### this might need to be changed to parms_in, not parms, to include global parms  
+                                                  params=parms)
+        
+    return task

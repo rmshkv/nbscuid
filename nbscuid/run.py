@@ -13,7 +13,6 @@ import time
 import ploomber
 
 def run():
-    print(ploomber.__version__)
     
     # Get control structure
     config_path = str(sys.argv[1])
