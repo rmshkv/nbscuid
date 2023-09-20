@@ -10,20 +10,13 @@
 
 	To make this super easily compatible with existing `mom6-tools` diagnostics, I've stuck all the global parameters accessed by all the notebooks under a dictionary called `diag_config_yml`, but this is totally optional as long as your notebook is accessing the parameter by its variable name.
 
-3. Right below this cell, paste in two cells that make the notebook compatible with `nbscuid`. Open up `nblibrary/testnb.ipynb` and select the cells below the title:
+3. Right below this cell, paste in two cells that make the notebook compatible with `nbscuid`. Open up `nblibrary/testnb.ipynb` and select the cell below the title:
 
 
 
 		# Empty cell with "parameters" tag, papermill-provided parameters will be inserted below.
-	### Connecting to cluster
-		from dask.distributed import Client
-		if cluster_scheduler_address is None:
-		    pass
-		else:
-            client = Client(cluster_scheduler_address)
 
-            client
-	With these cells selected (shift-click to select multiple), right click and select "copy cells". Then, in your notebook, right click on your parameters cell, and select "paste cells below."
+	With this cell selected, right click and select "copy cell". Then, in your notebook, right click on your parameters cell, and select "paste cells below."
 
 	*Note: You need to paste notebook cells rather than just the code above, because the cell that looks like it just has the parameters comment actually has a special tag attached that allows papermill to see it. See [papermill's documentation](https://papermill.readthedocs.io/en/latest/usage-parameterize.html) to see how to do this yourself!*
 

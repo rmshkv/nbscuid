@@ -11,16 +11,15 @@ Welcome to nbscuid's documentation!
    :caption: Contents:
    
    gettingstarted
-   tutorialsetup
+   tutorial1
+   tutorial2
    howtosetupdevelopment
    addingnotebookstocollection
    modules
    nbscuid
 
 .. automodule:: nbscuid.util
-    :members:
 .. automodule:: nbscuid.run
-    :members:
 .. automodule:: nbscuid.build
     :members:
 
