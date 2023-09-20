@@ -10,11 +10,11 @@
 
         mamba env create -f environment.yml
 
-    This will create an environment called `nbscuid-tutorial1`, which has `nbscuid` installed, as well as the packages necessary to run the tutorial notebooks.
+    This will create an environment called `nbscuid-tutorial2`, which has `nbscuid` installed, as well as the packages necessary to run the tutorial notebooks.
 
 3. Activate the environment you just installed:
         
-        conda activate nbscuid-tutorial1
+        conda activate nbscuid-tutorial2
 
 4. Run 
             
