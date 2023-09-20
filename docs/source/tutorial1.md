@@ -1,4 +1,4 @@
-# Tutorial - how to get started with a basic notebook collection
+# Tutorial 1 - how to get started with a basic notebook collection
 
 1. Clone the `nbscuid-examples` repo: 
 

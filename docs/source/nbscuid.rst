@@ -12,14 +12,6 @@ nbscuid.build module
    :undoc-members:
    :show-inheritance:
 
-nbscuid.cache module
---------------------
-
-.. automodule:: nbscuid.cache
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 nbscuid.read module
 -------------------
 

@@ -18,10 +18,6 @@ Welcome to nbscuid's documentation!
    modules
    nbscuid
 
-.. automodule:: nbscuid.util
-.. automodule:: nbscuid.run
-.. automodule:: nbscuid.build
-    :members:
 
 Indices and tables
 ==================
