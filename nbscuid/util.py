@@ -15,7 +15,9 @@ from pathlib import Path
 
 
 class manage_conda_kernel(object):
-    """Manage conda kernels so they can be seen by `papermill`"""
+    """
+    Manage conda kernels so they can be seen by `papermill`
+    """
 
     def __init__(self, kernel_name: str):
         self.kernel_name = kernel_name
@@ -259,13 +261,13 @@ def create_ploomber_nb_task(nb, info, cat_path, nb_path_root, output_dir, global
         print(output_name)
         
         if dependency != None:
-            pass
+            raise NotImplementedError
             # set DAG dependency here 
             # something with task.set_upstream(other_task?)
         
     return task
 
-def create_ploomber_script_task(script, info, cat_path, nb_path_root, output_dir, global_params, dag, dependency=None):
+def create_ploomber_script_task(script, info, cat_path, nb_path_root, global_params, dag, dependency=None):
     """
     Creates a ploomber task for running a script, including necessary parameters.
     
@@ -276,7 +278,6 @@ def create_ploomber_script_task(script, info, cat_path, nb_path_root, output_dir
         info: various specifications for the notebook, originally from config.yml
         use_catalog: bool specified earlier, specifying if whole collection uses a catalog or not
         nb_path_root: from config.yml, path to folder containing template notebooks
-        output_dir: set directory where computed notebooks get put
         global_params: global parameters from config.yml
         dag: ploomber DAG to add the task to
         dependency: what the upstream task is
@@ -305,7 +306,7 @@ def create_ploomber_script_task(script, info, cat_path, nb_path_root, output_dir
             if key != 'none' else f'{script}'
         )
 
-        output_path = f'{output_dir}/{output_name}'
+        #output_path = f'{output_dir}/{output_name}'
         
         ### all of these things should be optional
         parms_in = dict(**default_params)
@@ -322,7 +323,7 @@ def create_ploomber_script_task(script, info, cat_path, nb_path_root, output_dir
         task = ploomber.tasks.ScriptRunner(Path(input_path), ploomber.products.File(info['product']), dag, params=parms_in, name=output_name)
         
         if dependency != None:
-            pass
+            raise NotImplementedError
             # set DAG dependency here 
             # something with task.set_upstream(other_task?)
         

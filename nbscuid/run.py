@@ -14,6 +14,12 @@ import ploomber
 def run():
     """
     Main engine to set up running all the notebooks. Called by `nbscuid-run`.
+    
+    Args:
+        none
+    Returns:
+        None
+    
     """
     
     # Get control structure
@@ -71,34 +77,40 @@ def run():
     #####################################################################
     # Organizing notebooks - holdover from manually managing dependencies before
 
-    independent_nbs = dict()
+    all_nbs = dict()
 
     for nb, info in control['compute_notebooks'].items():
         
-        independent_nbs[nb] = info
+        all_nbs[nb] = info
 
     # Setting up notebook tasks
     
-    for nb, info in independent_nbs.items():
+    for nb, info in all_nbs.items():
         
-        # actually - make this just return the task, then add to dag separately. that way can handle dependencies.
+        if "dependency" in info:
+            nbscuid.util.create_ploomber_nb_task(nb, info, cat_path, nb_path_root, output_dir, global_params, dag, dependency = info["dependency"])
         
-        nbscuid.util.create_ploomber_nb_task(nb, info, cat_path, nb_path_root, output_dir, global_params, dag)
+        else: 
+            nbscuid.util.create_ploomber_nb_task(nb, info, cat_path, nb_path_root, output_dir, global_params, dag)
     
     #####################################################################
     # Organizing scripts
     
-    independent_scripts = dict()
+    all_scripts = dict()
 
     for script, info in control['compute_scripts'].items():
         
-        independent_scripts[script] = info
+        all_scripts[script] = info
 
     # Setting up script tasks
     
-    for script, info in independent_scripts.items():
+    for script, info in all_scripts.items():
         
-        nbscuid.util.create_ploomber_script_task(script, info, cat_path, nb_path_root, output_dir, global_params, dag)
+        if "dependency" in info:
+            nbscuid.util.create_ploomber_script_task(script, info, cat_path, nb_path_root, global_params, dag, dependency = info["dependency"])
+            
+        else:     
+            nbscuid.util.create_ploomber_script_task(script, info, cat_path, nb_path_root, global_params, dag)
     
     # Run the full DAG
     

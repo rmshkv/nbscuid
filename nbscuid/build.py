@@ -6,6 +6,14 @@ import os
 import yaml
 
 def build():
+    """
+    Build a Jupyter book based on the TOC in config.yml. Called by `nbscuid-build`.
+    
+    Args:
+        none
+    Returns:
+        None
+    """
     
     config_path = str(sys.argv[1])
     
@@ -17,7 +25,9 @@ def build():
 
     subprocess.run(["jupyter-book", "clean" , f"{run_dir}/computed_notebooks/{sname}"])
     subprocess.run(["jupyter-book",  "build" , f"{run_dir}/computed_notebooks/{sname}",  "--all"])
-                   
+
+### Originally used this code to copy jupyter book HTML to a location to host it online
+
 #     if 'publish_location' in control:
         
 #         user = os.environ.get('USER')

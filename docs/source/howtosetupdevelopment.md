@@ -5,11 +5,7 @@
 ```
 git clone https://github.com/rmshkv/nbscuid.git
 ```
-Currently, the active work is being done on the include-ploomber-dev branch. To get on this branch, inside the directory you just cloned, run:
 
-```
-git checkout include-ploomber-dev
-```
 2. Cd into the folder with nbscuid source code:
 
 ```
