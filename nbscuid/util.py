@@ -89,9 +89,10 @@ def get_control_dict(config_path):
             if "kernel_name" not in d:
                 d["kernel_name"] = default_kernel_name
         
-        for d in control["compute_scripts"].values():
-            if "kernel_name" not in d:
-                d["kernel_name"] = default_kernel_name
+        if "compute_scripts" in control:
+            for d in control["compute_scripts"].values():
+                if "kernel_name" not in d:
+                    d["kernel_name"] = default_kernel_name
         
     else:
         for nb, d in control["compute_notebooks"].items():
@@ -103,8 +104,9 @@ def get_control_dict(config_path):
     for nb, d in control["compute_notebooks"].items():
         manage_conda_kernel(d["kernel_name"]).ensure_installed()
 
-    for script, d in control["compute_scripts"].items():
-        manage_conda_kernel(d["kernel_name"]).ensure_installed()
+    if "compute_scripts" in control:
+        for script, d in control["compute_scripts"].items():
+            manage_conda_kernel(d["kernel_name"]).ensure_installed()
         
     return control
 

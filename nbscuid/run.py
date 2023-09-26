@@ -96,21 +96,23 @@ def run():
     #####################################################################
     # Organizing scripts
     
-    all_scripts = dict()
-
-    for script, info in control['compute_scripts'].items():
-        
-        all_scripts[script] = info
-
-    # Setting up script tasks
+    if 'compute_scripts' in control:
     
-    for script, info in all_scripts.items():
-        
-        if "dependency" in info:
-            nbscuid.util.create_ploomber_script_task(script, info, cat_path, nb_path_root, global_params, dag, dependency = info["dependency"])
-            
-        else:     
-            nbscuid.util.create_ploomber_script_task(script, info, cat_path, nb_path_root, global_params, dag)
+        all_scripts = dict()
+
+        for script, info in control['compute_scripts'].items():
+
+            all_scripts[script] = info
+
+        # Setting up script tasks
+
+        for script, info in all_scripts.items():
+
+            if "dependency" in info:
+                nbscuid.util.create_ploomber_script_task(script, info, cat_path, nb_path_root, global_params, dag, dependency = info["dependency"])
+
+            else:     
+                nbscuid.util.create_ploomber_script_task(script, info, cat_path, nb_path_root, global_params, dag)
     
     # Run the full DAG
     

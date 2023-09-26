@@ -10,8 +10,7 @@
 
 	To make this super easily compatible with existing `mom6-tools` diagnostics, I've stuck all the global parameters accessed by all the notebooks under a dictionary called `diag_config_yml`, but this is totally optional as long as your notebook is accessing the parameter by its variable name.
 
-3. Right below this cell, paste in two cells that make the notebook compatible with `nbscuid`. Open up `nblibrary/testnb.ipynb` and select the cell below the title:
-
+3. Right below this cell, paste in a cell that make the notebook compatible with `nbscuid`, telling it where to inject parameters. Open up `nblibrary/testnb.ipynb` and select the cell below the title:
 
 
 		# Empty cell with "parameters" tag, papermill-provided parameters will be inserted below.
@@ -23,7 +22,6 @@
 4. Open `config.yml`. First, add your new notebook (as its name, minus the `.ipynb`) to the list of notebooks that will be computed (`compute_notebooks`). For example:
 
 		your_new_nb_name:
-		    use_cluster: True  # True if you want the global Dask cluster passed in, otherwise False
 			    parameter_groups:
 				    none:
 						param_specific_to_this_nb: some_value
